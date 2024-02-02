@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import  generics
 from .models import actress
-from .serializers import actressSerializer
+from .serializers import *
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.forms import model_to_dict
@@ -20,22 +20,57 @@ class actressApiviewOld(APIView):
 
         return Response({'post': model_to_dict(post_new)})
 
-class actressApiview(APIView):
-    def get(self, request):
-        w = actress.objects.all()
-        return Response({'posts': actressSerializer(w, many= True).data})
+class actressAPIList(generics.ListCreateAPIView):
+    queryset = actress.objects.all()
+    serializer_class = actressSerializer
 
-    def post(self,request):
-        serializer = actressSerializer(data= request.data)
-        serializer.is_valid(raise_exception=True)
+class actressAPIUpdate(generics.UpdateAPIView):
+    queryset = actress.objects.all()
+    serializer_class = actressSerializer
 
-        post_new = actress.objects.create(
-            title=request.data['title'],
-            content=request.data['content'],
-            cat_id = request.data['cat_id']
-        )
+class actressAPIDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = actress.objects.all()
+    serializer_class = actressSerializer
 
-        return Response({'post': actressSerializer(post_new).data})
+# class actressApiview(APIView):
+#     def get(self, request):
+#         w = actress.objects.all()
+#         return Response({'posts': actressSerializer(w, many= True).data})
+#
+#     def post(self,request):
+#         serializer = actressSerializer(data= request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#
+#
+#         return Response({'post': serializer.data})
+#
+#     def put(self, request, *args , **kwargs ):
+#         pk = kwargs.get("pk", None)
+#         if not pk :
+#             return Response({"error": "method put is not allowed"})
+#
+#         try:
+#             instance = actress.objects.get(pk=pk)
+#         except:
+#             return Response({"error": "object does not exists"})
+#
+#     def delete(self, request, *args, **kwargs):
+#         pk = kwargs.get("pk", None)
+#         if not pk:
+#             return Response({"error": "method DELETE is not allowed"})
+#
+#         return Response({"post": "delete post"+ str(pk)})
+#
+#
+#
+#
+#         serializer = actressSerializer(data= request.data, instance=instance)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response({"post": serializer.data})
+#
+
 # class actressApiview(generics.ListAPIView):
 #    queryset = actress.objects.all()
 #    serializer_class = actressSerializer

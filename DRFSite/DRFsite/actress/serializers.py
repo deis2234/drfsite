@@ -5,6 +5,7 @@ from .models import *
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 
+
 # class ActressModel:
 #     def __init__(self, title, content):
 #         self.title = title
@@ -15,13 +16,11 @@ class actressSerializerold(serializers.ModelSerializer):
         model = actress
         fields = ('title', 'cat_id')
 
-class actressSerializer(serializers.Serializer):
-    title = serializers.CharField(max_length=255)
-    content = serializers.CharField()
-    time_create = serializers.DateTimeField()
-    time_update = serializers.DateTimeField()
-    is_published = serializers.BooleanField(default=True)
-    cat_id = serializers.IntegerField()
+
+class actressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = actress
+        fields = "__all__"
 
 # def encode():
 #     model = ActressModel('Margot Robbie', 'Margot Robbie')
